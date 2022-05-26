@@ -76,3 +76,14 @@
     border-bottom: 1px dashed rgb(71, 37, 37);
     font-size: 15px;
 }
+
+.optionButton{
+  border: none;
+  padding: 7px;
+  border-radius: 5px;
+  background-color: white;
+  font-weight: 500;
+  margin-right: 10px;
+  cursor: pointer;
+  color: black;
+}

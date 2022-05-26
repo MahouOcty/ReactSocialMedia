@@ -1,4 +1,4 @@
-import { collection,  onSnapshot } from "firebase/firestore";
+import { collection,  onSnapshot, orderBy } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { firebaseDb } from "../../Initializers/firebaseConfig";
 import Post from "../post/Post";
@@ -10,7 +10,7 @@ export default function Feed() {
   const [posts, setPosts] =useState([]);
 
   const getPosts = async () => {
-    onSnapshot(collection(firebaseDb, "post"), (snapshot) => {
+    onSnapshot(collection(firebaseDb, "post"), orderBy("created"), (snapshot) => {
       const docs = [];
       snapshot.docs.forEach((doc) => {
         docs.push({...doc.data(), id: doc.id});

@@ -3,12 +3,13 @@ import {PermMedia, Label,Room, EmojiEmotions} from "@material-ui/icons"
 import { useEffect, useRef, useState } from "react";
 import { firebaseAuth, firebaseDb, firebaseStorage } from "../../Initializers/firebaseConfig";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 export default function Share() {
   const desc = useRef();
   const [user, setUser] = useState(firebaseAuth.currentUser);
   const [file, setFile] = useState(null);
+  const [value, setValue] = useState("");
 
   const submitHandler =  (async (e) => {
     e.preventDefault();
@@ -20,7 +21,8 @@ export default function Share() {
         desc: desc.current.value,
         userInfo: {
           userName: user.displayName,
-          photoURL: user.photoURL
+          photoURL: user.photoURL,
+          userUID: user.uid
         }, 
         fileData: {
           type: "text"
@@ -36,7 +38,8 @@ export default function Share() {
     else {
       const storageRef = ref(firebaseStorage, file.name);
       uploadBytes(storageRef, file).then((snapshot) => {
-      const today = new Date().toLocaleDateString()
+      const today = new Date().toLocaleDateString();
+      const timeStamp = serverTimestamp();
       getDownloadURL(snapshot.ref).then((downloadURL) => {
         const newPost = {
           desc: desc.current.value,
@@ -46,15 +49,15 @@ export default function Share() {
           },
           userInfo: {
             userName: user.displayName,
-            photoURL: user.photoURL
+            photoURL: user.photoURL,
+            userUID: user.uid
           }, 
           date: today,
           like: 0,
-          comment:0
+          comment:0,
+          created: timeStamp
         }
-        addDoc(collection(firebaseDb,"post"), newPost).then(() => {
-          window.location.reload();
-        })
+        addDoc(collection(firebaseDb,"post"), newPost).then(setValue(""))
       })
     })}
     
@@ -74,6 +77,8 @@ export default function Share() {
             placeholder="¿Qué tienes en mente?"
             className="shareInput"
             ref={desc}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
           />
         </div>
         <hr className="shareHr"/>

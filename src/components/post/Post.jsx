@@ -1,16 +1,47 @@
 import "./post.css";
-import { MoreVert } from "@material-ui/icons";
-import { useState } from "react";
+import { Create, Delete } from "@material-ui/icons";
+import { useEffect, useState } from "react";
+import { firebaseAuth, firebaseDb } from "../../Initializers/firebaseConfig";
+import { deleteDoc, doc } from "firebase/firestore";
 
 
 export default function Post( {post} ) {
-  const [like,setLike] = useState(post.like)
-  const [isLiked,setIsLiked] = useState(false)
+  const [like,setLike] = useState(post.like);
+  const [isLiked,setIsLiked] = useState(false);
+  const [user, setUser] = useState(firebaseAuth.currentUser);
+
   const type = post.fileData.type;
   const likeHandler =()=>{
     setLike(isLiked ? like-1 : like+1)
     setIsLiked(!isLiked)
   }
+
+  const deletePost = () =>{deleteDoc (doc(firebaseDb, "post", post.id))}
+
+  const isUser = () => {
+    if(user.uid === post.userInfo.userUID) {
+      return (
+        <>
+          <button 
+          className="optionButton">
+            <Create/> 
+          </button>
+          <button 
+          className="optionButton"
+          onClick={()=>deletePost()}>
+            <Delete/> 
+          </button>
+        </>    
+      )
+    }
+  }
+
+  useEffect(() => {
+    firebaseAuth.onAuthStateChanged((e) => {
+      setUser(e);
+    })
+  }, []);
+  
   return (
     <div className="post">
       <div className="postWrapper">
@@ -27,7 +58,7 @@ export default function Post( {post} ) {
             <span className="postDate">{post.date}</span>
           </div>
           <div className="postTopRight">
-            <MoreVert />
+            {isUser()}
           </div>
         </div>
         <div className="postCenter">
