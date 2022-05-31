@@ -1,5 +1,6 @@
-import { collection,  onSnapshot, orderBy } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { collection,  onSnapshot, orderBy, query } from "firebase/firestore";
+import { useContext, useEffect, useState } from "react";
+import { searchContext } from "../../helpers/Context";
 import { firebaseDb } from "../../Initializers/firebaseConfig";
 import Post from "../post/Post";
 import Share from "../share/Share";
@@ -9,8 +10,12 @@ export default function Feed() {
 
   const [posts, setPosts] =useState([]);
 
+  const {searchDesc} = useContext(searchContext);
+
   const getPosts = async () => {
-    onSnapshot(collection(firebaseDb, "post"), orderBy("created"), (snapshot) => {
+    const colRef = collection(firebaseDb, "post");
+    const q = query(colRef,  orderBy("createdAt","desc"));
+    onSnapshot(q, (snapshot) => {
       const docs = [];
       snapshot.docs.forEach((doc) => {
         docs.push({...doc.data(), id: doc.id});
@@ -27,8 +32,12 @@ export default function Feed() {
     <div className="feed">
       <div className="feedWrapper">
         <Share />
-        {posts.map((p) => {
-          return <Post key={p.id} post={p} />
+        {posts
+        .filter((p) => {
+           return p.desc.includes(searchDesc)
+        })
+        .map((p) => {
+            return <Post key={p.id} post={p} />
         })}
       </div>
     </div>

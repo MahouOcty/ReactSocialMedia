@@ -1,11 +1,13 @@
 import "./topbar.css";
 import { Search, Person, Chat, Notifications } from "@material-ui/icons";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { firebaseAuth } from "../../Initializers/firebaseConfig";
 import { signOut } from "firebase/auth";
+import { searchContext } from "../../helpers/Context";
 
 export default function Topbar() {
 
+  const {setSearchDesc} = useContext(searchContext);
   const [user, setUser] = useState(firebaseAuth.currentUser);
   useEffect(() => {
     firebaseAuth.onAuthStateChanged((e) => {
@@ -23,6 +25,9 @@ export default function Topbar() {
           <input
             placeholder="Buscar"
             className="searchInput"
+            onChange={(e) => {
+              setSearchDesc(e.target.value)
+            }}
           />
         </div>
       </div>

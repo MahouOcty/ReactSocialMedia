@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { firebaseAuth } from '../Initializers/firebaseConfig';
 import Login from './login/Login';
-import Profile from './profile/Profile';
+import Home from "./home/Home"
 
 const Page = () => {
 
@@ -17,7 +17,7 @@ const Page = () => {
     return (
         <>
             {isLogedIn 
-                ? <Profile/>
+                ? <Home/>
                 : <Login/> }
         </>
     );

@@ -39,7 +39,6 @@ export default function Share() {
       const storageRef = ref(firebaseStorage, file.name);
       uploadBytes(storageRef, file).then((snapshot) => {
       const today = new Date().toLocaleDateString();
-      const timeStamp = serverTimestamp();
       getDownloadURL(snapshot.ref).then((downloadURL) => {
         const newPost = {
           desc: desc.current.value,
@@ -55,7 +54,7 @@ export default function Share() {
           date: today,
           like: 0,
           comment:0,
-          created: timeStamp
+          createdAt: serverTimestamp()
         }
         addDoc(collection(firebaseDb,"post"), newPost).then(setValue(""))
       })
