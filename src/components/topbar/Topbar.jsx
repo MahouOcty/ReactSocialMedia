@@ -1,5 +1,5 @@
 import "./topbar.css";
-import { Search, Person, Chat, Notifications } from "@material-ui/icons";
+import { Search } from "@material-ui/icons";
 import { useContext, useEffect, useState } from "react";
 import { firebaseAuth } from "../../Initializers/firebaseConfig";
 import { signOut } from "firebase/auth";
@@ -23,7 +23,7 @@ export default function Topbar() {
         <div className="searchbar">
           <Search className="searchIcon" />
           <input
-            placeholder="Buscar"
+            placeholder="Buscar descripcion..."
             className="searchInput"
             onChange={(e) => {
               setSearchDesc(e.target.value)
@@ -32,29 +32,12 @@ export default function Topbar() {
         </div>
       </div>
       <div className="topbarRight">
-        <div className="topbarLinks">
-          <span className="topbarLink">Home</span>
-          <span className="topbarLink">Actividad</span>
-          <span className="topbarLink">Perfil</span>
         
-        </div>
-        <div className="topbarIcons">
-          <div className="topbarIconItem">
-            <Person />
-            <span className="topbarIconBadge">1</span>
-          </div>
-          <div className="topbarIconItem">
-            <Chat />
-            <span className="topbarIconBadge">2</span>
-          </div>
-          <div className="topbarIconItem">
-            <Notifications />
-            <span className="topbarIconBadge">1</span>
-          </div>
-        </div>
-        <button className="topbarImgButton" onClick={() => signOut(firebaseAuth)} >
-          <img src={user.photoURL} alt="" className="topbarImg"/>
+        <button className="topbarButton" onClick={() => signOut(firebaseAuth)} >
+         Log Out
         </button>
+
+        <img src={user.photoURL} alt="" className="topbarImg"/>
         
       </div>
     </div>

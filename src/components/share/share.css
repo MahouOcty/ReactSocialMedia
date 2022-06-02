@@ -53,6 +53,8 @@
     align-items: center;
     margin-right: 15px;
     cursor: pointer;
+    border: none;
+    background-color: white;
 }
 
 .shareIcon{
@@ -80,4 +82,21 @@
   display: flex;
   margin-left: 20px;
   flex-direction: column;
+}
+
+.hideShareTags{
+  display: none;
+}
+
+
+.shareTopic{
+  border: 1px solid #cccccc;
+  height: 32px;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.shareTopic:focus{
+  border: 1px solid #2684ff;
 }

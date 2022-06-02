@@ -87,13 +87,15 @@
   font-size: 12px;
 }
 
-.topbarImgButton {
+.topbarButton {
     background-color: transparent;
     background-repeat: no-repeat;
     border: none;
     cursor: pointer;
     overflow: hidden;
     outline: none;
+    color:rgb(255, 255, 255);
+    font-size: large;
 }
 
 .topbarImg {

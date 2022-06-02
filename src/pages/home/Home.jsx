@@ -9,9 +9,22 @@ import { useState } from "react";
 export default function Home() {
 
   const [searchDesc, setSearchDesc] = useState("");
+  const [searchCareer, setSearchCareer] = useState("");
+  const [searchLesson, setSearchLesson] = useState("");
+  const [searchTopic, setSearchTopic] = useState("");
 
   return (
-    <searchContext.Provider value={{searchDesc, setSearchDesc}}>
+    <searchContext.Provider 
+    value={
+      {searchDesc, 
+        setSearchDesc,
+        searchCareer, 
+        setSearchCareer, 
+        searchLesson, 
+        setSearchLesson,
+        searchTopic, 
+        setSearchTopic
+      }}>
       <Topbar />
       <div className="homeContainer">
         <Sidebar />

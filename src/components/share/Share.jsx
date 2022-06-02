@@ -1,5 +1,5 @@
 import "./share.css";
-import {PermMedia, Label,Room, EmojiEmotions} from "@material-ui/icons"
+import {PermMedia, Label} from "@material-ui/icons"
 import { useEffect, useRef, useState } from "react";
 import { firebaseAuth, firebaseDb, firebaseStorage } from "../../Initializers/firebaseConfig";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -10,12 +10,12 @@ export default function Share() {
   const desc = useRef();
   const [user, setUser] = useState(firebaseAuth.currentUser);
   const [file, setFile] = useState(null);
-  const [value, setValue] = useState("");
   const [selectionCareer, setSelectionCareer] = useState("");
   const [selectionLesson, setSelectionLesson] = useState("");
   const [topic, setTopic] = useState("");
   const [careersOptions, setCareersOptions] = useState([]);
   const [careersLessons, setCareersLessons] = useState([]);
+  const [hideTags, setHideTags] = useState(true);
   
 
   const getCareers = () => {
@@ -49,13 +49,11 @@ export default function Share() {
           type: "text"
         },
         date: today,
-        like: 0,
-        comment:0,
         createdAt: serverTimestamp(),
         tags: {
-          career: selectionCareer,
-          lesson: selectionLesson,
-          topic: topic
+          career: (selectionCareer.length > 0) ? selectionCareer : "Libre",
+          lesson: (selectionLesson.length > 0) ? selectionLesson : "Libre",
+          topic: (topic.length > 0) ? topic : "Sin tema"
         }
       }
       addDoc(collection(firebaseDb,"post"), newPost).then(() => {
@@ -79,16 +77,14 @@ export default function Share() {
             userUID: user.uid
           }, 
           date: today,
-          like: 0,
-          comment:0,
           createdAt: serverTimestamp(),
           tags: {
-            career: selectionCareer,
-            lesson: selectionLesson,
-            topic: topic
+            career: (selectionCareer.length > 0) ? selectionCareer : "Libre",
+          lesson: (selectionLesson.length > 0) ? selectionLesson : "Libre",
+          topic: (topic.length > 0) ? topic : "Sin tema"
           }
         }
-        addDoc(collection(firebaseDb,"post"), newPost).then(setValue(""))
+        addDoc(collection(firebaseDb,"post"), newPost).then(() => window.location.reload())
       })
     })}
     
@@ -110,8 +106,6 @@ export default function Share() {
             placeholder="¿Qué tienes en mente?"
             className="shareInput"
             ref={desc}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
           />
         </div>
         <hr className="shareHr"/>
@@ -128,29 +122,27 @@ export default function Share() {
                       setFile(e.target.files[0]);
                     }} />
                 </label>
-                <div className="shareOption">
+                <button 
+                className="shareOption"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setHideTags(!hideTags)
+                  }}>
                     <Label htmlColor="blue" className="shareIcon"/>
                     <span className="shareOptionText">Tag</span>
-                </div>
-                <div className="shareOption">
-                    <Room htmlColor="green" className="shareIcon"/>
-                    <span className="shareOptionText">Localizacion</span>
-                </div>
-                <div className="shareOption">
-                    <EmojiEmotions htmlColor="goldenrod" className="shareIcon"/>
-                    <span className="shareOptionText">Comentarios</span>
-                </div>
+                </button>
+                <button className="shareButton" type="submit">Compartir</button>
             </div>
-            <div className="shareTags">
-              Carrera:
+            <div className={`shareTags ${hideTags ? "hideShareTags": ""}`}>
+            <span>Carrera:</span>  
               <Select 
               options={careersOptions} 
               onChange={(value) => {
                 setSelectionCareer(value.value);
               }} />
-              Materia:
+              <span>Materia:</span>  
               {careersLessons
-              .filter((c) => selectionCareer===c.career)
+              .filter((c) => selectionCareer === c.career)
               .map((c) => {
                 const lessonsOptions = []
                 c.lessons.forEach((lesson) => {
@@ -165,15 +157,15 @@ export default function Share() {
                   }} />
                 )
                 })}
-                Tema: 
+                <span>Tema:</span>  
                 <input
+                className="shareTopic"
                 placeholder="Ingresa tu tema"
-                className="shareInput"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 />
                 </div>
-            <button className="shareButton" type="submit">Compartir</button>
+            
         </form>
       </div>
     </div>

@@ -10,7 +10,7 @@ export default function Feed() {
 
   const [posts, setPosts] =useState([]);
 
-  const {searchDesc} = useContext(searchContext);
+  const {searchDesc, searchCareer, searchLesson, searchTopic} = useContext(searchContext);
 
   const getPosts = async () => {
     const colRef = collection(firebaseDb, "post");
@@ -34,7 +34,7 @@ export default function Feed() {
         <Share />
         {posts
         .filter((p) => {
-           return p.desc.includes(searchDesc)
+           return p.desc.includes(searchDesc) && p.tags.career.includes(searchCareer) && p.tags.lesson.includes(searchLesson) && p.tags.topic.includes(searchTopic)
         })
         .map((p) => {
             return <Post key={p.id} post={p} />

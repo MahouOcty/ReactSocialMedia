@@ -55,3 +55,18 @@
 }
 
 
+
+.search{
+  border: 1px solid #cccccc;
+  height: 32px;
+  width: 300px;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.search span {
+  margin-top: 10px;
+}
+
+
